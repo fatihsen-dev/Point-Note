@@ -7,12 +7,15 @@ export default function App() {
    const [desc, setdesc] = useState("");
    const [formActive, setFormActive] = useState(false);
    const [activePoint, setActivePoint] = useState({});
+   const [noteMode, setNoteMode] = useState(false);
 
    const pointsHandle = (e) => {
-      const randomColor = Math.floor(Math.random() * colors.length);
-      const { clientX, clientY } = e;
-      setActivePoint({ X: clientX, Y: clientY, C: colors[randomColor] });
-      setFormActive(true);
+      if (noteMode) {
+         const randomColor = Math.floor(Math.random() * colors.length);
+         const { clientX, clientY } = e;
+         setActivePoint({ X: clientX, Y: clientY, C: colors[randomColor] });
+         setFormActive(true);
+      }
    };
 
    const buttonHandle = (e) => {
@@ -37,58 +40,65 @@ export default function App() {
    };
 
    return (
-      <div onClick={pointsHandle} className='container'>
-         {points &&
-            points.map((point, key) => (
-               <div
-                  tabIndex={0}
-                  style={{
-                     "--left": point.X + "px",
-                     "--top": point.Y + "px",
-                     "--color": point.C,
-                  }}
-                  className='btn-ctnr'
-                  onClick={buttonHandle}
-                  key={key}>
-                  <button key={key} className='point'></button>
-                  <div className='menu'>
-                     <span>{point.title}</span>
-                     <p>{point.desc}</p>
-                     <button onClick={editHandle}>Edit</button>
+      <div className='container'>
+         <div className='header'>
+            <button onClick={() => setNoteMode(!noteMode)} className='new'>
+               {noteMode ? "Disable" : "Active"}
+            </button>
+         </div>
+         <main onClick={pointsHandle} className='main'>
+            {points &&
+               points.map((point, key) => (
+                  <div
+                     tabIndex={0}
+                     style={{
+                        "--left": point.X + "px",
+                        "--top": point.Y + "px",
+                        "--color": point.C,
+                     }}
+                     className='btn-ctnr'
+                     onClick={buttonHandle}
+                     key={key}>
+                     <button key={key} className='point'></button>
+                     <div className='menu'>
+                        <span>{point.title}</span>
+                        <p>{point.desc}</p>
+                        <button onClick={editHandle}>Edit</button>
+                     </div>
                   </div>
-               </div>
-            ))}
-         {formActive && (
-            <form
-               onClick={(e) => e.stopPropagation()}
-               className='form'
-               onSubmit={(e) => {
-                  e.preventDefault();
-               }}>
-               <div className='inset'>
-                  <input
-                     maxLength={30}
-                     value={title}
-                     onChange={(e) => setTitle(e.target.value)}
-                     placeholder='Title'
-                     type='text'
-                     name='title'
-                  />
-                  <textarea
-                     maxLength={160}
-                     value={desc}
-                     onChange={(e) => setdesc(e.target.value)}
-                     placeholder='Description'
-                     name='desc'></textarea>
-                  <div className='buttons'>
-                     <button onClick={cencelHandle} type='reset'>
-                        Cencel
-                     </button>
-                     <button onClick={submitHandle}>Save</button>
+               ))}
+            {formActive && (
+               <form
+                  onClick={(e) => e.stopPropagation()}
+                  className='form'
+                  onSubmit={(e) => {
+                     e.preventDefault();
+                  }}>
+                  <div className='inset'>
+                     <input
+                        maxLength={30}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder='Title'
+                        type='text'
+                        name='title'
+                     />
+                     <textarea
+                        maxLength={160}
+                        value={desc}
+                        onChange={(e) => setdesc(e.target.value)}
+                        placeholder='Description'
+                        name='desc'></textarea>
+                     <div className='buttons'>
+                        <button onClick={cencelHandle} type='reset'>
+                           Cencel
+                        </button>
+                        <button onClick={submitHandle}>Save</button>
+                     </div>
                   </div>
-               </div>
-            </form>
-         )}
+               </form>
+            )}
+         </main>
       </div>
    );
 }

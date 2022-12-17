@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+   <head>
+      <meta charset="UTF-8" />
+      <link
+         rel="icon"
+         type="image/svg+xml"
+         href="data:image/png;base64,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" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Point Note</title>
+   </head>
+   <body>
+      <div id="root"></div>
+      <script type="module" src="/src/main.jsx"></script>
+   </body>
 </html>
