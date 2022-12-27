@@ -28,17 +28,17 @@ body
       display: flex
       flex-direction: column
       & > .header
-         height: 68px
+         height: 70px
          background: #151515
          display: flex
          align-items: center
-         padding: 0 15px
+         padding: 0 20px
          .new
             background-color: #1982c4
             color: #fff
             border: none
             width: 140px
-            height: 40px
+            height: 34px
             font-weight: 500
             font-size: 16px
             border-radius: 5px
@@ -54,6 +54,8 @@ body
             z-index: 99
             inset: 0
             background: rgba(0, 0, 0, .5)
+            opacity: 0
+            pointer-events: none
             display: flex
             justify-content: center
             align-items: center
@@ -146,15 +148,23 @@ body
                   color: #aaa
                   text-overflow: ellipsis
                   overflow: hidden
-               & > button
-                  margin-top: 20px
+               & > div
                   margin-left: auto
-                  border: none
-                  background: var(--color)
-                  color: #fff
-                  padding: 3px 20px
-                  border-radius: 2px
-                  cursor: pointer
-                  transition: .15s
-                  &:hover
-                     opacity: .9
+                  margin-top: 20px
+                  display: flex
+                  gap: 10px
+                  & > button
+                     margin-top: 20px
+                     border: none
+                     background: var(--color)
+                     color: #fff
+                     padding: 3px 20px
+                     border-radius: 2px
+                     cursor: pointer
+                     font-size: 12px
+                     transition: .15s
+                     &:nth-last-of-type(2)
+                        background-color: #ff595e
+                     &:hover
+                        opacity: .9
+                     

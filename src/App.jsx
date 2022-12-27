@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function App() {
    const colors = ["#ff595e", "#ffca3a", "#8ac926", "#1982c4", "#6a4c93"];
@@ -6,8 +6,13 @@ export default function App() {
    const [title, setTitle] = useState("");
    const [desc, setdesc] = useState("");
    const [formActive, setFormActive] = useState(false);
+   const [editActive, setEditActive] = useState(false);
    const [activePoint, setActivePoint] = useState({});
    const [noteMode, setNoteMode] = useState(false);
+   const [activeIndex, setActiveIndex] = useState();
+
+   const editInput = useRef();
+   const editTextarea = useRef();
 
    const pointsHandle = (e) => {
       if (noteMode) {
@@ -30,13 +35,32 @@ export default function App() {
          setdesc("");
       }
    };
+
    const cencelHandle = (e) => {
       setActivePoint({});
       setFormActive(false);
+      setEditActive(false);
    };
 
-   const editHandle = (e) => {
-      // splice(4, 1, "May");
+   const editHandle = (index) => {
+      setEditActive(true);
+      setActiveIndex(index);
+      editInput.current.value = points[index].title;
+      editTextarea.current.value = points[index].title;
+   };
+
+   const deleteHandle = (index) => {
+      const test = points.splice(index, 1);
+      setPoints(points.filter((el, i) => i !== index));
+   };
+
+   const editSubmit = () => {
+      points.splice(activeIndex, 1, {
+         ...points[activeIndex],
+         title: editInput.current.value,
+         desc: editTextarea.current.value,
+      });
+      setEditActive(false);
    };
 
    return (
@@ -63,41 +87,73 @@ export default function App() {
                      <div className='menu'>
                         <span>{point.title}</span>
                         <p>{point.desc}</p>
-                        <button onClick={editHandle}>Edit</button>
+                        <div>
+                           <button onClick={() => deleteHandle(key)}>Delete</button>
+                           <button onClick={() => editHandle(key)}>Edit</button>
+                        </div>
                      </div>
                   </div>
                ))}
-            {formActive && (
-               <form
-                  onClick={(e) => e.stopPropagation()}
-                  className='form'
-                  onSubmit={(e) => {
-                     e.preventDefault();
-                  }}>
-                  <div className='inset'>
-                     <input
-                        maxLength={30}
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder='Title'
-                        type='text'
-                        name='title'
-                     />
-                     <textarea
-                        maxLength={160}
-                        value={desc}
-                        onChange={(e) => setdesc(e.target.value)}
-                        placeholder='Description'
-                        name='desc'></textarea>
-                     <div className='buttons'>
-                        <button onClick={cencelHandle} type='reset'>
-                           Cencel
-                        </button>
-                        <button onClick={submitHandle}>Save</button>
-                     </div>
+
+            <form
+               style={formActive ? { opacity: 1, pointerEvents: "auto" } : null}
+               onClick={(e) => e.stopPropagation()}
+               className='form'
+               onSubmit={(e) => {
+                  e.preventDefault();
+               }}>
+               <div className='inset'>
+                  <input
+                     maxLength={30}
+                     value={title}
+                     onChange={(e) => setTitle(e.target.value)}
+                     placeholder='Title'
+                     type='text'
+                     name='title'
+                  />
+                  <textarea
+                     maxLength={160}
+                     value={desc}
+                     onChange={(e) => setdesc(e.target.value)}
+                     placeholder='Description'
+                     name='desc'></textarea>
+                  <div className='buttons'>
+                     <button onClick={cencelHandle} type='reset'>
+                        Cencel
+                     </button>
+                     <button onClick={submitHandle}>Save</button>
                   </div>
-               </form>
-            )}
+               </div>
+            </form>
+
+            <form
+               style={editActive ? { opacity: 1, pointerEvents: "auto" } : null}
+               onClick={(e) => e.stopPropagation()}
+               className='form'
+               onSubmit={(e) => {
+                  e.preventDefault();
+               }}>
+               <div className='inset'>
+                  <input
+                     maxLength={30}
+                     ref={editInput}
+                     placeholder='Title'
+                     type='text'
+                     name='title'
+                  />
+                  <textarea
+                     maxLength={160}
+                     ref={editTextarea}
+                     placeholder='Description'
+                     name='desc'></textarea>
+                  <div className='buttons'>
+                     <button onClick={cencelHandle} type='reset'>
+                        Cencel
+                     </button>
+                     <button onClick={editSubmit}>Edit</button>
+                  </div>
+               </div>
+            </form>
          </main>
       </div>
    );
